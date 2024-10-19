@@ -215,7 +215,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    char* dllPath = "C:\\Users\\meii\\Dekstop\\rgbypass\\Release\\dll.dll";
+    char* dllPath = "path to dll";
     void* pRtlLogStackBackTrace = NULL;
     void* pLoadLibraryExA = NULL;
     void* pDllPath;
@@ -236,25 +236,25 @@ int main(int argc, char* argv[])
     {
         printf("Failed to find function(s).\n");
 
-		CloseHandle(hProcess);
-		return 1;
+	CloseHandle(hProcess);
+	return 1;
     }
     else {
-		printf("ntdll!RtlLogStackBackTrace: %p\n", pRtlLogStackBackTrace);
-		printf("kernel32!LoadLibraryExA: %p\n", pLoadLibraryExA);
+	printf("ntdll!RtlLogStackBackTrace: %p\n", pRtlLogStackBackTrace);
+	printf("kernel32!LoadLibraryExA: %p\n", pLoadLibraryExA);
     }
 
     pDllPath = VirtualAllocEx(hProcess, NULL, strlen(dllPath) + 1, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     if (pDllPath == NULL)
     {
-		printf("Failed to allocate memory. Do I have PROCESS_VM_OPERATION?\n");
+	printf("Failed to allocate memory. Do I have PROCESS_VM_OPERATION?\n");
 
         return 1;
     }
 
     if (!WriteProcessMemory(hProcess, pDllPath, dllPath, strlen(dllPath) + 1, NULL))
     {
-		printf("Failed to write memory. Do I have PROCESS_VM_WRITE?\n");
+	printf("Failed to write memory. Do I have PROCESS_VM_WRITE?\n");
 
         return 1;
     }
@@ -272,7 +272,7 @@ int main(int argc, char* argv[])
 
     if (!WriteProcessMemory(hProcess, pRtlLogStackBackTrace, bShellCode, sizeof(bShellCode), NULL))
     {
-		printf("Failed to write memory. Do I have PROCESS_VM_WRITE?\n");
+	printf("Failed to write memory. Do I have PROCESS_VM_WRITE?\n");
 
         return 1;
     }
@@ -280,7 +280,7 @@ int main(int argc, char* argv[])
     HANDLE hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)pRtlLogStackBackTrace, NULL, 0, NULL);
     if (hThread == NULL)
     {
-		printf("Failed to create thread. Do I have PROCESS_CREATE_THREAD?\n");
+	printf("Failed to create thread. Do I have PROCESS_CREATE_THREAD?\n");
 
         return 1;
     }
